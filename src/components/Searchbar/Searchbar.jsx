@@ -5,6 +5,7 @@ import { ReactComponent as SearchIcon } from '../../icon/search.svg';
 export class Searchbar extends Component {
   state = {
     value: '',
+    searchName: '',
   };
 
   handleChange = ({ target: { value } }) => {
@@ -13,6 +14,7 @@ export class Searchbar extends Component {
 
   handleSubmit = e => {
     e.preventDefault();
+    this.props.onSubmit(this.state.value);
   };
 
   render() {
