@@ -2,10 +2,12 @@ import { Component } from 'react';
 import { AppContainer } from './App.styled';
 import { Searchbar } from './Searchbar/Searchbar';
 import * as API from '../api/api';
-import { toast } from 'react-toastify';
+import { toast, ToastContainer, Slide } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { ImageGallery } from './ImageGallery/ImageGallery';
 import { Button } from './Button/Button';
+import { Modal } from './Modal/Modal';
+import { Loader } from './Loader/Loader';
 
 export class App extends Component {
   state = {
@@ -60,7 +62,7 @@ export class App extends Component {
       const data = await API.getImages(searchName, page);
 
       if (data.hits.length === 0) {
-        return toast.info('Sorry image not found...', {
+        toast.warn('Sorry, image not found...', {
           position: toast.POSITION.TOP_RIGHT,
         });
       }
@@ -81,13 +83,29 @@ export class App extends Component {
   };
 
   render() {
-    const { images } = this.state;
+    const { images, modalData, isModalOpen, isLoading, totalPages, page } =
+      this.state;
     return (
-      <AppContainer>
-        <Searchbar onSubmit={this.handleSubmit} />
-        <ImageGallery images={images} handleOpenModal={this.handleOpenModal} />
-        <Button onClick={this.loadMore} title={'Load More'} />
-      </AppContainer>
+      <>
+        <ToastContainer transition={Slide} />
+        <AppContainer>
+          <Searchbar onSubmit={this.handleSubmit} />
+          <ImageGallery
+            images={images}
+            handleOpenModal={this.handleOpenModal}
+          />
+          {isLoading && <Loader />}
+          {images.length > 0 && totalPages !== page && !isLoading && (
+            <Button onClick={this.loadMore} title={'Load More'} />
+          )}
+          {isModalOpen && (
+            <Modal
+              modalData={modalData}
+              handleCloseModal={this.handleCloseModal}
+            />
+          )}
+        </AppContainer>
+      </>
     );
   }
 }

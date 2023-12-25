@@ -5,7 +5,6 @@ import { ReactComponent as SearchIcon } from '../../icon/search.svg';
 export class Searchbar extends Component {
   state = {
     value: '',
-    searchName: '',
   };
 
   handleChange = ({ target: { value } }) => {
@@ -34,6 +33,7 @@ export class Searchbar extends Component {
             placeholder="Search images and photos"
             onChange={this.handleChange}
             value={value}
+            name="search"
           />
         </SearchForm>
       </SearchbarHeader>
